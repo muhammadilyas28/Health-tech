@@ -79,7 +79,7 @@ let dashboard = () =>{
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
                     </button>
-                    <h1 class="text-2xl ">Dashboard</h1>
+                    <h1 class="text-2xl ">Admin Dashboard</h1>
                 </header>
                 <main class="p-6">
                     <h2 class="text-3xl">Main Content</h2>
@@ -129,10 +129,6 @@ let dashboardInj = () =>{
 }
 
 
-
-
-
-
 let profileInj = () =>{
     let mainDiv = document.getElementById("mainDiv");
 
@@ -144,9 +140,6 @@ let profileInj = () =>{
                             ${ProfileManagement()}
                         `;
 }
-
-
-
 
 let mainDiv = document.getElementById("mainDiv");
 

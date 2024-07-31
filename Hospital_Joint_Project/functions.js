@@ -24,39 +24,3 @@ let disInfo = (divId) =>{
     pre = divId;
     preDiv = divId+"Div";
 }
-
-
-
-// // IndexedDB setup
-// const dbName = 'Users_DB';
-// let db;
-
-// const request = indexedDB.open(dbName, 4);
-
-// request.onerror = function(event) {
-//     console.error("Database error: ", event.target.errorCode);
-// };
-
-// request.onsuccess = function(event) {
-//     db = event.target.result;
-// };
-
-
-// // Store general data
-// document.getElementById('submitGeneralData').addEventListener('click', function() {
-//     const type = document.querySelector('#generalDiv .glassEffect:nth-child(1) .text-[#bebec6]').textContent.trim();
-//     const time = document.querySelector('#generalDiv .glassEffect:nth-child(2) .text-[#bebec6]').textContent.trim();
-//     const date = document.querySelector('#generalDiv .glassEffect:nth-child(3) .text-[#bebec6]').textContent.trim();
-
-//     const transaction = db.transaction(['general'], 'readwrite');
-//     const objectStore = transaction.objectStore('general');
-//     const request = objectStore.add({ type, time, date });
-
-//     request.onsuccess = function() {
-//         alert("General data stored successfully!");
-//     };
-
-//     request.onerror = function() {
-//         alert("Error storing general data.");
-//     };
-// });

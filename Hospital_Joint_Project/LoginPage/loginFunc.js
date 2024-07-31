@@ -1,11 +1,10 @@
 const dbName = 'Users_DB';
 let db;
 
+const request = indexedDB.open(dbName, 2);
 if (!window.indexedDB) {
     console.error("Your browser doesn't support IndexedDB.");
 } else {
-    const request = indexedDB.open(dbName, 3);
-    console.log("request --> " , request)
 
     request.onerror = function(event) {
         console.error("Database error: ", event.target.errorCode || event.target.error);
@@ -19,13 +18,15 @@ if (!window.indexedDB) {
     request.onupgradeneeded = function(event) {
         console.log("Upgrading database...");
         db = event.target.result;
-        const objectStore = db.createObjectStore('users', { keyPath: 'email' });
-        objectStore.createIndex('email', 'email', { unique: true });
-        console.log("Object store and index created.");
+        const userStore = db.createObjectStore('users', { keyPath: 'email' });
+        userStore.createIndex('email', 'email', { unique: true });
+
+        // const adminStore = db.createObjectStore('admin', { keyPath: 'email' });
+        // adminStore.createIndex('email', 'email', { unique: true });
+        
+        console.log("Object stores and indexes created.");
     };
 }
-
-
 
 // Login user
 document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -33,71 +34,57 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    const transaction = db.transaction(['users']);
-    console.log("transaction --> " , transaction)
+    // Function to handle login for a specific object store
+    function handleLogin(objectStoreName, callback) {
+        console.log(objectStoreName);
+        console.log(objectStoreName);
+        const transaction = db.transaction([objectStoreName], 'readonly');
+        const objectStore = transaction.objectStore(objectStoreName);
 
-    const objectStore = transaction.objectStore('users');
-    console.log("objectStore --> " , objectStore)
+        const request = objectStore.get(email);
 
-    const data = objectStore.getAll();
-    console.log("data --> " , data)
-    
-    const request = objectStore.get(1);
-    console.log("request --> " , request)
-    
-    request.onsuccess = function() {
-        // console.log(request);
-        // console.log(data);
-        if (request.result && request.result.password === password) {
-            // document.getElementById('message').textContent = "Login successful!";
-            // document.getElementById('message').classList.remove('text-red-500');
-            // document.getElementById('message').classList.add('text-green-500');
-            alert('Login succesfully')
-
-            if (request.result.type == "admin") {
-                
-                window.location.href = '../Dashboard/dashboard.html'; // Change 'dashboard.html' to the path of your desired HTML file
+        request.onsuccess = function() {
+            const user = request.result;
+            
+            if (user && user.password === password) {
+                callback(user);
+            } else {
+                callback(null);
             }
+        };
 
-            // Redirect to another HTML file
+        request.onerror = function() {
+            document.getElementById('message').textContent = "Error: Unable to login.";
+            document.getElementById('message').classList.add('text-red-500');
+        };
+    }
+
+    // Check admin table first
+    handleLogin('admin', function(adminUser) {
+        console.log(adminUser);
+        if (adminUser) {
+            console.log(adminUser);
+            alert('Login successful!');
+            window.location.href = '../Dashboard/dashboard.html'; // Redirect to admin dashboard
         } else {
-            document.getElementById('message').textContent = "Invalid email or password.";
+            // If not an admin, check users table
+            handleLogin('users', function(normalUser) {
+                console.log(normalUser);
+                if (normalUser) {
+                    console.log(normalUser);
+                    alert('Login successful!');
+                    if (normalUser.specialization === 'doctor') {
+                        window.location.href = '../Doctorsdashboard/index.html'; // Redirect to doctor dashboard
+                    } else if (normalUser.specialization === 'patient') {
+                        window.location.href = '../patientDashboard/index.html'; // Redirect to patient dashboard
+                    } else {
+                        window.location.href = '../UserDashboard/user_dashboard.html'; // Redirect to a default user dashboard
+                    }
+                } else {
+                    document.getElementById('message').textContent = "Invalid email or password.";
+                    document.getElementById('message').classList.add('text-red-500');
+                }
+            });
         }
-    };
-
-    request.onerror = function() {
-        document.getElementById('message').textContent = "Error: Unable to login.";
-    };
+    });
 });
-
-// // Register new user
-// document.getElementById('registerForm').addEventListener('submit', function(event) {
-//     event.preventDefault();
-//     const email = document.getElementById('regEmail').value;
-//     const password = document.getElementById('regPassword').value;
-
-//     const transaction = db.transaction(['users'], 'readwrite');
-//     const objectStore = transaction.objectStore('users');
-//     const request = objectStore.add({ email, password });
-
-//     request.onsuccess = function() {
-//         document.getElementById('registerMessage').textContent = "Registration successful!";
-//         document.getElementById('registerMessage').classList.remove('text-red-500');
-//         document.getElementById('registerMessage').classList.add('text-green-500');
-//     };
-
-//     request.onerror = function() {
-//         document.getElementById('registerMessage').textContent = "Error: Email already registered.";
-//     };
-// });
-
-// // Toggle between login and register forms
-// document.getElementById('showRegister').addEventListener('click', function() {
-//     document.getElementById('loginForm').parentElement.classList.add('hidden');
-//     document.getElementById('registerDiv').classList.remove('hidden');
-// });
-
-// document.getElementById('showLogin').addEventListener('click', function() {
-//     document.getElementById('registerDiv').classList.add('hidden');
-//     document.getElementById('loginForm').parentElement.classList.remove('hidden');
-// });

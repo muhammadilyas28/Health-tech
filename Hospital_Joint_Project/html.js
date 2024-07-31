@@ -292,15 +292,6 @@ for (let i = 0; i < four_body_cards_icon1.length; i++) {
     main.innerHTML += cardsmaker(four_body_cards_icon1[i], title_four_cards_1[i], four_cards_details, button_text[i])
 }
 
-// console.log(main)
-
-// let x = document.createElement('div')
-// x.textContent = "kkk"
-
-// let ilyas = document.getElementById('ilyasCode')
-// ilyas.appendChild(x)
-// console.log(x)
-
 let six_cards_icon = [
     '<i class="fa-solid fa-pills"></i>',
     '<i class="fa-solid fa-vial-virus"></i>',
@@ -373,8 +364,6 @@ function FNmain() {
 
 secondpart2000.innerHTML += FNmain()
 
-
-
 function createElement(tag, classNames, innerHTML = '', style = {}) {
     const element = document.createElement(tag);
     element.className = classNames;
@@ -382,7 +371,6 @@ function createElement(tag, classNames, innerHTML = '', style = {}) {
     Object.assign(element.style, style);
     return element;
 }
-
 
 // -----------------Last Portion Doughnut chart----------------------
 
@@ -395,7 +383,6 @@ function createLegend() {
     `;
     return legend;
 }
-
 
 function createChart() {
     const chartContainer = createElement('div', 'chart-container shadow-lg p-8 rounded-lg');
@@ -441,8 +428,6 @@ function createChart() {
     chartContainer.appendChild(createLegend());
     return chartContainer;
 }
-
-
 
 function createCard(iconClass, title) {
     const card = createElement('div', 'card glassEffect text-white p-4 hover:bg-white hover:text-black rounded-lg shadow-md transition cursor-pointer flex flex-row gap-3');
@@ -526,14 +511,6 @@ let footerDesign = () => {
 `}
 let footerNavItems = ['About us', 'How it works', 'Doctors', 'Contact us']
 
-
-
-
-
-
-
-
-
 document.body.appendChild(main)
 document.body.appendChild(secondpart2000)
 
@@ -553,3 +530,54 @@ let footerNav_div = document.getElementById('footerNav_div')
 footerNavItems.forEach((v) => {
     footerNav_div.innerHTML += `<a href="#" class="text-white  hover:text-[#dbfb74]">${v}</a>`
 })
+
+
+function addAdminData() {
+    let request = indexedDB.open('adminDatabase', 4);
+
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains('admin')) {
+            db.createObjectStore('admin', { keyPath: 'email' });
+        }
+    };
+
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        console.log('Database opened successfully');
+
+        let transaction = db.transaction('admin', 'readwrite');
+        const objectStore = transaction.objectStore('admin');
+
+        let adminData = [
+            { email: 'admin1@example.com', password: 'password1' },
+            { email: 'admin2@example.com', password: 'password2' }
+        ];
+
+        adminData.forEach(admin => {
+            const request = objectStore.add(admin);
+            request.onsuccess = () => {
+                console.log(`Admin data added: ${JSON.stringify(admin)}`);
+            };
+            request.onerror = (event) => {
+                console.error('Error adding admin data:', event.target.error);
+            };
+        });
+
+        transaction.oncomplete = () => {
+            console.log('Admin data transaction completed');
+        };
+
+        transaction.onerror = (event) => {
+            console.error('Transaction error:', event.target.error);
+        };
+    };
+
+    request.onerror = (event) => {
+        console.error('Database open error:', event.target.error);
+    };
+}
+
+// Call the function to add admin data
+addAdminData();
+

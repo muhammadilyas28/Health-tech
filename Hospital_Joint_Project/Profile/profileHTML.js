@@ -1,9 +1,3 @@
-
-
-
-
-
-
 let pro = () =>{
 
     return  `

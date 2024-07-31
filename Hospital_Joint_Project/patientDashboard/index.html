@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="../fontawesome-6.4.2/css/all.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        .sidebar-visible {
+            transform: translateX(0);
+        }
+        .hidden-content {
+            display: none;
+        }
+        .visible-content {
+            display: block;
+        }
+        #sidebar-toggle {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .sidebar-visible #sidebar-toggle {
+            margin-left: 256px;
+        }
+        .sidebar-hidden #sidebar-toggle {
+            margin-left: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-white flex">
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar sidebar-hidden fixed top-0 left-0 w-64 bg-[#0b3842] h-full shadow-lg z-50">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
+            <ul>
+                <li><a href="#" id="profile-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Profile</a></li>
+                <li><a href="#" id="appointments-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Appointments</a></li>
+                <!-- Add more links as needed -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+        <button id="sidebar-toggle" class="bg-[#0b3842] text-white px-4 py-2 rounded mb-4">
+            <i class="fa-solid fa-bars" style="color: #ffffff;"></i>
+        </button>
+
+        <!-- Content Sections -->
+        <div id="profile-content" class="container visible-content">
+            <!-- Profile Section -->
+            <section class="bg-[#0b3842] text-white p-6 rounded-lg shadow-md mb-6 ml-28">
+                <h2 class="text-2xl font-bold mb-4">Profile</h2>
+                <div id="profile-section" class="flex items-center space-x-4">
+                    <img id="profile-picture" src="" alt="Profile Picture" class="profile-picture hidden">
+                    <div>
+                        <p id="profile-name"><strong>Name:</strong> </p>
+                        <p id="profile-email"><strong>Email:</strong> </p>
+                        <button id="edit-profile-btn" class="bg-[#20b4d59a] text-white px-4 py-2 rounded mt-4">Edit Profile</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="appointments-content" class="container hidden-content">
+            <!-- Appointment Reminder List -->
+            <section class="bg-[#0b3842] text-white p-6 rounded-lg shadow-md ml-28">
+                <h2 class="text-2xl font-bold mb-4">Appointment Section</h2>
+                <ul  class="list-disc pl-5">
+                    <!-- Appointment Reminders -->
+                     <a href="../Appointment_final/calender.html" id="appointment-list"></a>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div id="profile-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
+        <div class="bg-[#105e7092] text-white p-6 rounded-lg shadow-lg w-1/3">
+            <h3 class="text-xl font-bold mb-4">Edit Profile</h3>
+            <form id="profile-form">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-bold text-gray-700">Name</label>
+                    <input type="text" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-bold text-gray-700">Email</label>
+                    <input type="email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" required>
+                </div>
+                <div class="mb-4">
+                    <label for="profile-picture-input" class="block text-sm font-bold text-gray-700">Profile Picture</label>
+                    <input type="file" id="profile-picture-input" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" accept="image/*">
+                </div>
+                <button type="submit" class="bg-green-600 text-black px-4 py-2 rounded font-bold">Save</button>
+                <button type="button" id="close-modal-btn" class="bg-red-500 text-black px-4 py-2 rounded ml-2 font-bold">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="patient.js"></script>
+</body>
+</html>
