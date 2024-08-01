@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Additional styles for modal backdrop */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex">
+        <nav id="sidebar" class="bg-gray-800 text-white w-64 h-screen p-4">
+            <div class="text-xl font-bold mb-6">Doctor Dashboard</div>
+            <ul class="space-y-4">
+                <li><a href="#profile" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('profile')">Profile Management</a></li>
+                <li><a href="#patients" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('patients')">Patient Management</a></li>
+                <li><a href="#reminders" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('reminders')">Reminders</a></li>
+                <li><a href="#previous" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('previous')">Previous Patients Record</a></li>
+                <li><a href="#prescription" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('prescription')">Prescription Options</a></li>
+                <li><a href="#schedule" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('schedule')">Doctor Schedule</a></li>
+            </ul>
+        </nav>
+
+        <div id="content" class="flex-grow p-6">
+            <button id="sidebarCollapse" class="bg-gray-800 text-white p-2 rounded mb-4">Toggle Sidebar</button>
+            
+            <!-- Doctor Profile Section -->
+            <div id="doctorProfile" class="mb-6">
+                <h2 class="text-2xl font-bold mb-2">Doctor Profile</h2>
+                <div id="profileInfo" class="bg-white p-4 rounded shadow flex items-center">
+                    <div id="profilePicture" class="w-24 h-24 bg-gray-300 rounded-full overflow-hidden mr-4">
+                        <img src="../download.jpg" alt="Profile Picture" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <p><strong>Name:</strong> <span id="profileNameDisplay">Dr. John Doe</span></p>
+                        <p><strong>Batch Number:</strong> <span id="profileBatchNumberDisplay">12345</span></p>
+                        <p><strong>Contact:</strong> <span id="profileContactDisplay">123-456-7890</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmailDisplay">john.doe@example.com</span></p>
+                        <p><strong>Fee:</strong> <span id="profileFeeDisplay">$100</span></p>
+                        <p><strong>Education Background:</strong> <span id="profileEducationDisplay">MBBS, MD</span></p>
+                        <button id="editProfileButton" class="bg-blue-500 text-white p-2 rounded mt-4">Edit Profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-content">
+                <div id="patients" class="section hidden">Patient Management Content</div>
+                <div id="reminders" class="section hidden">Reminders Content</div>
+                <div id="previous" class="section hidden">Previous Patients Record Content</div>
+                <div id="profile" class="section hidden">Profile Management Content</div>
+                <div id="prescription" class="section hidden">Prescription Options Content</div>
+                <div id="schedule" class="section hidden">
+                    <h2 class="text-2xl font-bold mb-2">Doctor Schedule</h2>
+                    <button id="addScheduleButton" class="bg-green-500 text-white p-2 rounded mb-4">Add Schedule</button>
+                    <div id="scheduleContent" class="bg-white p-4 rounded shadow">
+                        <!-- Schedule data will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Profile Management -->
+    <div id="profileModal" class="modal-backdrop">
+        <div class="bg-white w-full max-w-md mx-auto my-16 p-6 rounded shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Profile Management</h2>
+            <div id="profileContent">
+                <!-- Profile CRUD Form -->
+                <form id="profileForm" class="space-y-4">
+                    <div>
+                        <label for="profilePictureInput" class="block text-gray-700">Profile Picture:</label>
+                        <input type="file" id="profilePictureInput" class="w-full p-2 border border-gray-300 rounded" accept="image/*">
+                    </div>
+                    <div>
+                        <label for="profileName" class="block text-gray-700">Name:</label>
+                        <input type="text" id="profileName" class="w-full p-2 border border-gray-300 rounded" value="Dr. John Doe">
+                    </div>
+                    <div>
+                        <label for="profileBatchNumber" class="block text-gray-700">Batch Number:</label>
+                        <input type="text" id="profileBatchNumber" class="w-full p-2 border border-gray-300 rounded" value="12345">
+                    </div>
+                    <div>
+                        <label for="profileContact" class="block text-gray-700">Contact:</label>
+                        <input type="text" id="profileContact" class="w-full p-2 border border-gray-300 rounded" value="123-456-7890">
+                    </div>
+                    <div>
+                        <label for="profileEmail" class="block text-gray-700">Email:</label>
+                        <input type="email" id="profileEmail" class="w-full p-2 border border-gray-300 rounded" value="john.doe@example.com">
+                    </div>
+                    <div>
+                        <label for="profileFee" class="block text-gray-700">Fee:</label>
+                        <input type="text" id="profileFee" class="w-full p-2 border border-gray-300 rounded" value="$100">
+                    </div>
+                    <div>
+                        <label for="profileEducation" class="block text-gray-700">Education Background:</label>
+                        <input type="text" id="profileEducation" class="w-full p-2 border border-gray-300 rounded" value="MBBS, MD">
+                    </div>
+                    <div class="flex justify-end space-x-4">
+                        <button type="submit" class="bg-green-500 text-white p-2 rounded">Save</button>
+                        <button type="button" id="deleteProfile" class="bg-red-500 text-white p-2 rounded">Delete</button>
+                        <button type="button" id="closeProfileModal" class="bg-gray-500 text-white p-2 rounded">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding/Editing Schedule -->
+    <div id="scheduleModal" class="modal-backdrop">
+        <div class="bg-white w-full max-w-md mx-auto my-16 p-6 rounded shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Add/Edit Schedule</h2>
+            <div id="scheduleFormContent">
+                <!-- Schedule Form -->
+                <form id="scheduleForm" class="space-y-4">
+                    <div>
+                        <label for="scheduleDay" class="block text-gray-700">Day:</label>
+                        <select id="scheduleDay" class="w-full p-2 border border-gray-300 rounded">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="scheduleStartTime" class="block text-gray-700">Start Time:</label>
+                        <input type="time" id="scheduleStartTime" class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                    <div>
+                        <label for="scheduleEndTime" class="block text-gray-700">End Time:</label>
+                        <input type="time" id="scheduleEndTime" class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                    <div class="flex justify-end space-x-4">
+                        <button type="submit" class="bg-green-500 text-white p-2 rounded">Save</button>
+                        <button type="button" id="closeScheduleModal" class="bg-gray-500 text-white p-2 rounded">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let db;
+        const dbName = 'doctorDB';
+        const storeName = 'doctorDetails';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Open or create the database
+            const request = indexedDB.open(dbName, 1);
+
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                objectStore.createIndex('name', 'name', { unique: false });
+                objectStore.createIndex('fee', 'fee', { unique: false });
+                objectStore.createIndex('schedule', 'schedule', { unique: false });
+            };
+
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                loadDoctorDetails();
+            };
+
+            request.onerror = function(event) {
+                console.error('Database error:', event.target.errorCode);
+            };
+
+            document.getElementById('sidebarCollapse').addEventListener('click', function() {
+                let sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('hidden');
+            });
+    
+            document.getElementById('closeProfileModal').addEventListener('click', function() {
+                document.getElementById('profileModal').style.display = 'none';
+            });
+
+            document.getElementById('closeScheduleModal').addEventListener('click', function() {
+                document.getElementById('scheduleModal').style.display = 'none';
+            });
+    
+            // Show default section
+            showSection('profile');
+    
+            // Edit Profile Button Click
+            document.getElementById('editProfileButton').addEventListener('click', function() {
+                openModal('profileModal');
+            });
+    
+            // Profile CRUD Form Handling
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+    
+                // Retrieve profile information
+                const name = document.getElementById('profileName').value;
+                const batchNumber = document.getElementById('profileBatchNumber').value;
+                const contact = document.getElementById('profileContact').value;
+                const email = document.getElementById('profileEmail').value;
+                const fee = document.getElementById('profileFee').value;
+                const education = document.getElementById('profileEducation').value;
+    
+                // Update profile display
+                document.getElementById('profileNameDisplay').textContent = name;
+                document.getElementById('profileBatchNumberDisplay').textContent = batchNumber;
+                document.getElementById('profileContactDisplay').textContent = contact;
+                document.getElementById('profileEmailDisplay').textContent = email;
+                document.getElementById('profileFeeDisplay').textContent = fee;
+                document.getElementById('profileEducationDisplay').textContent = education;
+    
+                // Handle picture upload if present
+                const fileInput = document.getElementById('profilePictureInput');
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.querySelector('#profilePicture img').src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+    
+                // Hide the modal
+                document.getElementById('profileModal').style.display = 'none';
+                alert('Profile saved!');
+            });
+    
+            document.getElementById('deleteProfile').addEventListener('click', function() {
+                // Implement Delete Profile Logic Here
+                alert('Profile deleted!');
+            });
+
+            // Add Schedule Button Click
+            document.getElementById('addScheduleButton').addEventListener('click', function() {
+                openModal('scheduleModal');
+            });
+
+            // Schedule Form Handling
+            document.getElementById('scheduleForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Retrieve schedule information
+                const day = document.getElementById('scheduleDay').value;
+                const startTime = document.getElementById('scheduleStartTime').value;
+                const endTime = document.getElementById('scheduleEndTime').value;
+
+                // Check for duplicate day
+                if (document.querySelector(`#scheduleContent .schedule-item[data-day="${day}"]`)) {
+                    alert(`Schedule for ${day} already exists!`);
+                    return;
+                }
+
+                // Display the schedule (For demonstration, you can save it to a database or another storage)
+                const scheduleContent = document.getElementById('scheduleContent');
+                const scheduleItem = document.createElement('div');
+                scheduleItem.className = 'schedule-item p-2 border border-gray-300 rounded mb-2';
+                scheduleItem.setAttribute('data-day', day);
+                scheduleItem.innerHTML = `
+                    <strong>${day}:</strong> ${startTime} - ${endTime}
+                    <button class="bg-yellow-500 text-white p-1 rounded ml-4" onclick="editSchedule(this)">Edit</button>
+                    <button class="bg-red-500 text-white p-1 rounded ml-2" onclick="deleteSchedule(this)">Delete</button>
+                `;
+                scheduleContent.appendChild(scheduleItem);
+
+                // Save the schedule to IndexedDB
+                saveSchedule(day, startTime, endTime);
+
+                // Hide the modal
+                document.getElementById('scheduleModal').style.display = 'none';
+                alert('Schedule added!');
+            });
+        });
+
+        function showSection(sectionId) {
+            let sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.add('hidden');
+            });
+    
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+    
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function editSchedule(button) {
+            const scheduleItem = button.closest('.schedule-item');
+            const day = scheduleItem.getAttribute('data-day');
+            const [startTime, endTime] = scheduleItem.textContent.split(': ')[1].split(' - ');
+
+            document.getElementById('scheduleDay').value = day;
+            document.getElementById('scheduleStartTime').value = startTime.trim();
+            document.getElementById('scheduleEndTime').value = endTime.trim();
+
+            scheduleItem.remove();
+            openModal('scheduleModal');
+        }
+
+        function deleteSchedule(button) {
+            if (confirm('Are you sure you want to delete this schedule?')) {
+                button.closest('.schedule-item').remove();
+                alert('Schedule deleted!');
+            }
+        }
+
+        function saveSchedule(day, startTime, endTime) {
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
+
+            // Save schedule details
+            const schedule = {
+                name: document.getElementById('profileNameDisplay').textContent,
+                fee: document.getElementById('profileFeeDisplay').textContent,
+                schedule: { day, startTime, endTime }
+            };
+
+            const request = objectStore.add(schedule);
+
+            request.onsuccess = function() {
+                console.log('Schedule saved successfully!');
+            };
+
+            request.onerror = function(event) {
+                console.error('Error saving schedule:', event.target.errorCode);
+            };
+        }
+
+        function loadDoctorDetails() {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
+
+            const request = objectStore.getAll();
+
+            request.onsuccess = function(event) {
+                const schedules = event.target.result;
+
+                schedules.forEach(schedule => {
+                    const scheduleContent = document.getElementById('scheduleContent');
+                    const scheduleItem = document.createElement('div');
+                    scheduleItem.className = 'schedule-item p-2 border border-gray-300 rounded mb-2';
+                    scheduleItem.setAttribute('data-day', schedule.schedule.day);
+                    scheduleItem.innerHTML = `
+                        <strong>${schedule.schedule.day}:</strong> ${schedule.schedule.startTime} - ${schedule.schedule.endTime}
+                        <button class="bg-yellow-500 text-white p-1 rounded ml-4" onclick="editSchedule(this)">Edit</button>
+                        <button class="bg-red-500 text-white p-1 rounded ml-2" onclick="deleteSchedule(this)">Delete</button>
+                    `;
+                    scheduleContent.appendChild(scheduleItem);
+                });
+            };
+
+            request.onerror = function(event) {
+                console.error('Error loading doctor details:', event.target.errorCode);
+            };
+        }
+    </script>
+</body>
+</html>

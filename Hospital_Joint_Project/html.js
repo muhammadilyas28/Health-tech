@@ -533,7 +533,7 @@ footerNavItems.forEach((v) => {
 
 
 function addAdminData() {
-    let request = indexedDB.open('adminDatabase', 4);
+    let request = indexedDB.open('admin', 5);
 
     request.onupgradeneeded = (event) => {
         const db = event.target.result;

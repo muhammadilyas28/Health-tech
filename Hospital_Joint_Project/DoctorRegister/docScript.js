@@ -1,7 +1,7 @@
 // New code
 function openDb() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('Users_DB', 2); // Increment the version to 26
+        const request = indexedDB.open('Users_DB', 3); // Increment the version to 26
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
