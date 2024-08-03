@@ -1,100 +1,11 @@
-// const dbName = 'Users_DB';
-// let db;
-
-// if (!window.indexedDB) {
-//     console.error("Your browser doesn't support IndexedDB.");
-// } else {
-//     const request = indexedDB.open(dbName, 3);
-
-//     request.onerror = function(event) {
-//         console.error("Database error: ", event.target.errorCode || event.target.error);
-//     };
-
-//     request.onsuccess = function(event) {
-//         console.log("Database opened successfully");
-//         db = event.target.result;
-//     };
-
-//     request.onupgradeneeded = function(event) {
-//         console.log("Upgrading database...");
-//         db = event.target.result;
-
-//         if (!db.objectStoreNames.contains('users')) {
-//             const userStore = db.createObjectStore('users', { keyPath: 'email' });
-//             userStore.createIndex('email', 'email', { unique: true });
-//         }
-
-//         if (!db.objectStoreNames.contains('admin')) {
-//             const adminStore = db.createObjectStore('admin', { keyPath: 'email' });
-//             adminStore.createIndex('email', 'email', { unique: true });
-//         }
-
-//         console.log("Object stores and indexes created.");
-//     };
-// }
-
-// // Login user
-// document.getElementById('loginForm').addEventListener('submit', function(event) {
-//     event.preventDefault();
-//     const email = document.getElementById('email').value;
-//     const password = document.getElementById('password').value;
-
-//     // Function to handle login for a specific object store
-//     function handleLogin(objectStoreName, callback) {
-//         const transaction = db.transaction([objectStoreName], 'readonly');
-//         const objectStore = transaction.objectStore(objectStoreName);
-
-//         const request = objectStore.get(email);
-
-//         request.onsuccess = function() {
-//             const user = request.result;
-            
-//             if (user && user.password === password) {
-//                 callback(user);
-//             } else {
-//                 callback(null);
-//             }
-//         };
-
-//         request.onerror = function() {
-//             document.getElementById('message').textContent = "Error: Unable to login.";
-//             document.getElementById('message').classList.add('text-red-500');
-//         };
-//     }
-
-//     // Check admin table first
-//     handleLogin('admin', function(adminUser) {
-//         if (adminUser) {
-//             alert('Login successful!');
-//             window.location.href = '../Dashboard/admin_dashboard.html'; // Redirect to admin dashboard
-//         } else {
-//             // If not an admin, check users table
-//             handleLogin('users', function(normalUser) {
-//                 if (normalUser) {
-//                     alert('Login successful!');
-//                     if (normalUser.specialization === 'doctor') {
-//                         window.location.href = '../Doctorsdashboard/index.html'; // Redirect to doctor dashboard
-//                     } else if (normalUser.specialization === 'patient') {
-//                         window.location.href = '../patientDashboard/index.html'; // Redirect to patient dashboard
-//                     } else {
-//                         window.location.href = '../UserDashboard/user_dashboard.html'; // Redirect to a default user dashboard
-//                     }
-//                 } else {
-//                     document.getElementById('message').textContent = "Invalid email or password.";
-//                     document.getElementById('message').classList.add('text-red-500');
-//                 }
-//             });
-//         }
-//     });
-// });
 // ---------------------New Code -----------------------
 const usersDbName = 'Users_DB';
-const adminDbName = 'adminDatabase';
+const adminDbName = 'admin';
 let usersDb;
 let adminDb;
 
 // Open Users_DB
-const usersRequest = indexedDB.open(usersDbName, 3);
+const usersRequest = indexedDB.open(usersDbName, 5);
 usersRequest.onerror = function(event) {
     console.error("Users_DB error: ", event.target.errorCode || event.target.error);
 };
@@ -118,7 +29,7 @@ adminRequest.onerror = function(event) {
     console.error("adminDatabase error: ", event.target.errorCode || event.target.error);
 };
 adminRequest.onsuccess = function(event) {
-    console.log("adminDatabase opened successfully");
+    console.log("admin Database opened successfully");
     adminDb = event.target.result;
 };
 adminRequest.onupgradeneeded = function(event) {
@@ -134,30 +45,98 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     event.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    console.log(email);
+    console.log(password);   
 
     // Function to handle login for a specific object store in a specific database
+    // function handleLogin(db, objectStoreName, callback) {
+    //     console.log(db, objectStoreName, callback);
+        
+    //     const transaction = db.transaction([objectStoreName], 'readonly');
+    //     const objectStore = transaction.objectStore(objectStoreName);
+    //     console.log(email);
+    //     console.log(password);
+        
+    //     // const request = objectStore.get(email);
+    //     const request = objectStore.get("a@gmail.com");
+    //     console.log(request);
+    //     console.log(objectStore);
+    //     request.onsuccess = function() {
+    //         const user = request.result;
+    //         console.log(user);
+            
+    //         if (user && user.password === password) {
+    //             console.log(user);
+                
+    //             callback(user);
+    //         } else {
+    //             callback(null);
+    //         }
+    //     };
+
+    //     request.onerror = function() {
+    //         document.getElementById('message').textContent = "Error: Unable to login.";
+    //         document.getElementById('message').classList.add('text-red-500');
+    //     };
+    // }
+
+
     function handleLogin(db, objectStoreName, callback) {
+        console.log("DB:", db);
+        console.log("Object Store Name:", objectStoreName);
+        console.log("Callback Function:", callback);
+        
         const transaction = db.transaction([objectStoreName], 'readonly');
         const objectStore = transaction.objectStore(objectStoreName);
+        
+        console.log("Email:", email);
+        console.log("Password:", password);
+        
         const request = objectStore.get(email);
-
-        request.onsuccess = function() {
+        console.log("Request:", request);
+        console.log("Object Store:", objectStore);
+        
+        request.onsuccess = function(event) {
             const user = request.result;
+            console.log("User:", user);
+            
             if (user && user.password === password) {
+                console.log("Login successful:", user);
                 callback(user);
             } else {
+                console.log("Login failed: Invalid email or password");
                 callback(null);
             }
         };
-
-        request.onerror = function() {
+    
+        request.onerror = function(event) {
+            console.error("Request error:", event.target.errorCode);
             document.getElementById('message').textContent = "Error: Unable to login.";
             document.getElementById('message').classList.add('text-red-500');
         };
     }
+    
+    // // Example usage:
+    // // Assume you have already opened the database and obtained a reference to `db`
+    // const db; // Replace this with the actual database reference
+    // const objectStoreName = "users";
+    // const email = "a@gmail.com";
+    // const password = "password123";
+    
+    // handleLogin(db, objectStoreName, email, password, function(user) {
+    //     if (user) {
+    //         console.log("User logged in:", user);
+    //     } else {
+    //         console.log("Login failed");
+    //     }
+    // });
+    
 
     // Check adminDatabase first
     handleLogin(adminDb, 'admin', function(adminUser) {
+        console.log(adminDb);
+        console.log(adminUser);
+        
         if (adminUser) {
             alert('Login successful!');
             window.location.href = '../Dashboard/dashboard.html'; // Redirect to admin dashboard
@@ -167,9 +146,12 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
                 if (normalUser) {
                     alert('Login successful!');
                     if (normalUser.specialization === 'doctor') {
-                        window.location.href = '../Doctorsdashboard/index.html'; // Redirect to doctor dashboard
+                        window.location.href = '../Doctor_Profile_Edit/Doctor_Profile_Edit/index.html'; // Redirect to doctor dashboard
+                    } else if (normalUser.specialization === 'receptionist') {
+                        window.location.href = '../Recipetionist/index.html'; // Redirect to patient dashboard
                     } else if (normalUser.specialization === 'patient') {
                         window.location.href = '../patientDashboard/index.html'; // Redirect to patient dashboard
+
                     } else {
                         window.location.href = '../UserDashboard/user_dashboard.html'; // Redirect to a default user dashboard
                     }

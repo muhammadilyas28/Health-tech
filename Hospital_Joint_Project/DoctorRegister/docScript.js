@@ -1,7 +1,6 @@
-// New code
 function openDb() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('Users_DB', 3); // Increment the version to 26
+        const request = indexedDB.open('Users_DB', 5); // Increment the version to 5
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
@@ -9,19 +8,13 @@ function openDb() {
             // Create 'users' object store if it doesn't exist
             if (!db.objectStoreNames.contains('users')) {
                 const userStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+                // Uncomment these lines if you need to create indexes
                 // userStore.createIndex('name', 'name', { unique: false });
                 // userStore.createIndex('specialization', 'specialization', { unique: false });
                 // userStore.createIndex('phone', 'phone', { unique: false });
                 // userStore.createIndex('email', 'email', { unique: true });
                 // userStore.createIndex('password', 'password', { unique: false });
             }
-
-            // Create 'admin' object store if it doesn't exist
-            // if (!db.objectStoreNames.contains('admin')) {
-            //     const adminStore = db.createObjectStore('admin', { keyPath: 'id', autoIncrement: true });
-            //     adminStore.createIndex('email', 'email', { unique: true });
-            //     adminStore.createIndex('password', 'password', { unique: false });
-            // }
         };
 
         request.onsuccess = (event) => {
@@ -34,18 +27,13 @@ function openDb() {
     });
 }
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('userForm');
     form.addEventListener('submit', handleFormSubmit);
 
     // Optionally update the user list on page load
     updateUserList();
-
-    // Add admin data (make sure this is only done once or handle it appropriately)
-    // addAdminData();
 });
-
 
 async function handleFormSubmit(event) {
     event.preventDefault();
@@ -76,6 +64,13 @@ async function handleFormSubmit(event) {
         });
 
         request.onsuccess = () => {
+            console.log('User added/updated successfully:', {
+                name,
+                specialization,
+                phone,
+                email,
+                password
+            });
             document.getElementById('successMessage').classList.remove('hidden');
             form.reset();
             updateUserList();
@@ -88,8 +83,6 @@ async function handleFormSubmit(event) {
         console.error('Database error:', error);
     }
 }
-
-
 
 async function updateUserList() {
     try {
@@ -117,15 +110,6 @@ async function updateUserList() {
         console.error('Database error:', error);
     }
 }
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('userForm');
-    form.addEventListener('submit', handleFormSubmit);
-
-    // Optionally update the user list on page load
-    updateUserList();
-});
 
 function inputForm() {
     return `

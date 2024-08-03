@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/Hospital_Joint_Project/fontawesome-6.4.2/css/all.css">
     <style>
         /* Additional styles for modal backdrop */
         .modal-backdrop {
@@ -21,15 +22,29 @@
 </head>
 <body class="bg-gray-100">
     <div class="flex">
-        <nav id="sidebar" class="bg-gray-800 text-white w-64 h-screen p-4">
-            <div class="text-xl font-bold mb-6">Doctor Dashboard</div>
+        <nav id="sidebar" class="bg-gray-800 text-white w-80 h-screen p-4">
+            <div class="text-xl font-bold mb-6 flex gap-5 justify-center items-center">
+                <div>
+                    Doctor Dashboard
+                </div>
+                <!-- Logout Button -->
+                <div class="flex justify-start p-4 bg-[#4a638273] ">
+                    <button id="logoutButton" class=" p-2 rounded w-12 h-12 bg-green-400"><i class="fa-solid fa-power-off" style="color: #fb0101;"></i></button>
+                </div>
+                <!-- logout button -->
+                 
+
+            </div>
             <ul class="space-y-4">
-                <li><a href="#profile" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('profile')">Profile Management</a></li>
+
                 <li><a href="#patients" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('patients')">Patient Management</a></li>
                 <li><a href="#reminders" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('reminders')">Reminders</a></li>
                 <li><a href="#previous" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('previous')">Previous Patients Record</a></li>
                 <li><a href="#prescription" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('prescription')">Prescription Options</a></li>
                 <li><a href="#schedule" class="block p-2 hover:bg-gray-700 rounded-lg" onclick="showSection('schedule')">Doctor Schedule</a></li>
+                
+                <!-- Add this button to your HTML -->
+
             </ul>
         </nav>
 
@@ -62,7 +77,9 @@
                 <div id="profile" class="section hidden">Profile Management Content</div>
                 <div id="prescription" class="section hidden">Prescription Options Content</div>
                 <div id="schedule" class="section hidden">
+
                     <h2 class="text-2xl font-bold mb-2">Doctor Schedule</h2>
+
                     <button id="addScheduleButton" class="bg-green-500 text-white p-2 rounded mb-4">Add Schedule</button>
                     <div id="scheduleContent" class="bg-white p-4 rounded shadow">
                         <!-- Schedule data will be dynamically inserted here -->
@@ -154,6 +171,27 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Existing code...
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        // Redirect to the login page
+        window.location.href = 'login.html'; // Adjust the URL if your login page has a different name or path
+    });
+
+    // Existing code...
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Existing code...
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        // Redirect to the login page
+        window.location.href = '/Hospital_Joint_Project/Landing_page.html'; // Adjust the URL if your login page has a different name or path
+    });
+
+    // Existing code...
+});
+
         let db;
         const dbName = 'doctorDB';
         const storeName = 'doctorDetails';
@@ -193,14 +231,18 @@
             });
     
             // Show default section
+
             showSection('profile');
     
             // Edit Profile Button Click
+
             document.getElementById('editProfileButton').addEventListener('click', function() {
+                
                 openModal('profileModal');
             });
     
             // Profile CRUD Form Handling
+
             document.getElementById('profileForm').addEventListener('submit', function(e) {
                 e.preventDefault();
     
@@ -322,6 +364,7 @@
             // Save schedule details
             const schedule = {
                 name: document.getElementById('profileNameDisplay').textContent,
+                email: document.getElementById('profileEmailDisplay').textContent,
                 fee: document.getElementById('profileFeeDisplay').textContent,
                 schedule: { day, startTime, endTime }
             };
@@ -367,3 +410,7 @@
     </script>
 </body>
 </html>
+
+
+
+<!-- welcome doctor Dashboard by nhis name, get name from iDB 'doctorDB' table 'doctorDetails', only show shcedule for that doctor not others , use email for customized schedule data show for each doctor , fix it -->

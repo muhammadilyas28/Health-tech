@@ -544,7 +544,7 @@ function addAdminData() {
 
     request.onsuccess = (event) => {
         const db = event.target.result;
-        console.log('Database opened successfully');
+        console.log('Admin Database opened successfully and default');
 
         let transaction = db.transaction('admin', 'readwrite');
         const objectStore = transaction.objectStore('admin');
@@ -559,18 +559,18 @@ function addAdminData() {
             request.onsuccess = () => {
                 console.log(`Admin data added: ${JSON.stringify(admin)}`);
             };
-            request.onerror = (event) => {
-                console.error('Error adding admin data:', event.target.error);
-            };
+            // request.onerror = (event) => {
+            //     console.error('Error adding admin data:', event.target.error);
+            // };
         });
 
-        transaction.oncomplete = () => {
-            console.log('Admin data transaction completed');
-        };
+        // transaction.oncomplete = () => {
+        //     console.log('Admin data transaction completed');
+        // };
 
-        transaction.onerror = (event) => {
-            console.error('Transaction error:', event.target.error);
-        };
+        // transaction.onerror = (event) => {
+        //     console.error('Transaction error:', event.target.error);
+        // };
     };
 
     request.onerror = (event) => {
