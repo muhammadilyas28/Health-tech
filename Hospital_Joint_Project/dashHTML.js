@@ -128,11 +128,6 @@ let dashboardInj = () =>{
                         `;
 }
 
-
-
-
-
-
 let profileInj = () =>{
     let mainDiv = document.getElementById("mainDiv");
 

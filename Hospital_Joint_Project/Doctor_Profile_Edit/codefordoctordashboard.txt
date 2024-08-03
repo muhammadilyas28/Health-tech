@@ -1,3 +1,4 @@
+"Correct code for doctor profile"
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -201,17 +202,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const request = indexedDB.open(dbName, 1);
 
             request.onupgradeneeded = function(event) {
-            const db = event.target.result;
-
-            // Create the object store with 'email' as the keyPath
-            const objectStore = db.createObjectStore(storeName, { keyPath: 'email' });
-
-            // Create indices for other properties
-            objectStore.createIndex('name', 'name', { unique: false });
-            objectStore.createIndex('fee', 'fee', { unique: false });
-            objectStore.createIndex('schedules', 'schedules', { unique: false, multiEntry: true });
-        };
-
+                db = event.target.result;
+                const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+                objectStore.createIndex('name', 'name', { unique: false });
+                objectStore.createIndex('fee', 'fee', { unique: false });
+                objectStore.createIndex('schedule', 'schedule', { unique: false });
+            };
 
             request.onsuccess = function(event) {
                 db = event.target.result;
@@ -363,92 +359,59 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function saveSchedule(day, startTime, endTime) {
-    const transaction = db.transaction([storeName], 'readwrite');
-    const objectStore = transaction.objectStore(storeName);
-    const email = document.getElementById('profileEmailDisplay').textContent;
+            const transaction = db.transaction([storeName], 'readwrite');
+            const objectStore = transaction.objectStore(storeName);
 
-    // Retrieve the existing record
-    const getRequest = objectStore.get(email);
-
-    getRequest.onsuccess = function(e) {
-        let data = e.target.result;
-
-        // If data exists, add new schedule; otherwise, initialize data
-        if (data) {
-            console.log(data);
-            
-            const newSchedule = { day, startTime, endTime };
-
-            // Initialize schedules array if it doesn't exist
-            if (!data.schedules) {
-                data.schedules = [];
-            }
-
-            // Add the new schedule to the existing schedules array
-            data.schedules.push(newSchedule);
-
-            // Update the record
-            const putRequest = objectStore.put(data);
-
-            putRequest.onsuccess = function() {
-                console.log('Schedule saved successfully!');
-                loadDoctorDetails(); // Reload schedules to reflect changes
+            // Save schedule details
+            const schedule = {
+                name: document.getElementById('profileNameDisplay').textContent,
+                email: document.getElementById('profileEmailDisplay').textContent,
+                fee: document.getElementById('profileFeeDisplay').textContent,
+                schedule: { day, startTime, endTime }
             };
 
-            putRequest.onerror = function(event) {
+            const request = objectStore.add(schedule);
+
+            request.onsuccess = function() {
+                console.log('Schedule saved successfully!');
+            };
+
+            request.onerror = function(event) {
                 console.error('Error saving schedule:', event.target.errorCode);
             };
-        } else {
-            console.error('No doctor data found for email:', email);
         }
-    };
 
-    getRequest.onerror = function(event) {
-        console.error('Error retrieving doctor data:', event.target.errorCode);
-    };
-}
+        function loadDoctorDetails() {
+            const transaction = db.transaction([storeName], 'readonly');
+            const objectStore = transaction.objectStore(storeName);
 
+            const request = objectStore.getAll();
 
+            request.onsuccess = function(event) {
+                const schedules = event.target.result;
 
-function loadDoctorDetails() {
-    const transaction = db.transaction([storeName], 'readonly');
-    const objectStore = transaction.objectStore(storeName);
-    const email = document.getElementById('profileEmailDisplay').textContent;
+                schedules.forEach(schedule => {
+                    const scheduleContent = document.getElementById('scheduleContent');
+                    const scheduleItem = document.createElement('div');
+                    scheduleItem.className = 'schedule-item p-2 border border-gray-300 rounded mb-2';
+                    scheduleItem.setAttribute('data-day', schedule.schedule.day);
+                    scheduleItem.innerHTML = `
+                        <strong>${schedule.schedule.day}:</strong> ${schedule.schedule.startTime} - ${schedule.schedule.endTime}
+                        <button class="bg-yellow-500 text-white p-1 rounded ml-4" onclick="editSchedule(this)">Edit</button>
+                        <button class="bg-red-500 text-white p-1 rounded ml-2" onclick="deleteSchedule(this)">Delete</button>
+                    `;
+                    scheduleContent.appendChild(scheduleItem);
+                });
+            };
 
-    // Retrieve the doctor's data
-    const getRequest = objectStore.get(email);
-
-    getRequest.onsuccess = function(event) {
-        const data = event.target.result;
-        const scheduleContent = document.getElementById('scheduleContent');
-
-        if (data && data.schedules) {
-            scheduleContent.innerHTML = ''; // Clear existing schedules
-
-            data.schedules.forEach(schedule => {
-                const scheduleItem = document.createElement('div');
-                scheduleItem.className = 'schedule-item p-2 border border-gray-300 rounded mb-2';
-                scheduleItem.setAttribute('data-day', schedule.day);
-                scheduleItem.innerHTML = `
-                    <strong>${schedule.day}:</strong> ${schedule.startTime} - ${schedule.endTime}
-                    <button class="bg-yellow-500 text-white p-1 rounded ml-4" onclick="editSchedule(this)">Edit</button>
-                    <button class="bg-red-500 text-white p-1 rounded ml-2" onclick="deleteSchedule(this)">Delete</button>
-                `;
-                scheduleContent.appendChild(scheduleItem);
-            });
+            request.onerror = function(event) {
+                console.error('Error loading doctor details:', event.target.errorCode);
+            };
         }
-    };
-
-    getRequest.onerror = function(event) {
-        console.error('Error loading doctor details:', event.target.errorCode);
-    };
-}
-
-
     </script>
 </body>
 </html>
 
 
 
-<!-- welcome doctor Dashboard by his name, get name from iDB 'doctorDB' table 'doctorDetails', only show shcedule for that doctor not others , use email for customized schedule data show for each doctor , fix it -->
+welcome doctor Dashboard by nhis name, get name from iDB 'doctorDB' table 'doctorDetails', only show shcedule for that doctor not others , use email for customized schedule data show for each doctor , fix it
