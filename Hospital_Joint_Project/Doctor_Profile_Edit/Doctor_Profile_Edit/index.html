@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error saving schedule:', event.target.errorCode);
             };
         } else {
-            console.error('No doctor data found for email:', email);
+            console.log('No doctor data found for email:', email);
         }
     };
 
@@ -443,12 +443,6 @@ function loadDoctorDetails() {
         console.error('Error loading doctor details:', event.target.errorCode);
     };
 }
-
-
     </script>
 </body>
 </html>
-
-
-
-<!-- welcome doctor Dashboard by his name, get name from iDB 'doctorDB' table 'doctorDetails', only show shcedule for that doctor not others , use email for customized schedule data show for each doctor , fix it -->

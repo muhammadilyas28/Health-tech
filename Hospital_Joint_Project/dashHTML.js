@@ -10,7 +10,7 @@ let inputFields = (name,id,inputType) =>{
 let ProfileManagement = () =>{
 
     return `
-            <!-- Back Button -->
+          
             <div class="max-w-2xl mx-auto py-4">
                 <div id="backButton" class="flex items-center cursor-pointer p-2 hover:bg-gray-200 rounded">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -139,8 +139,6 @@ let profileInj = () =>{
                             ${ProfileManagement()}
                         `;
 }
-
-
 
 
 let mainDiv = document.getElementById("mainDiv");

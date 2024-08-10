@@ -47,11 +47,10 @@
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar sidebar-hidden fixed top-0 left-0 w-64 bg-[#0b3842] h-full shadow-lg z-50">
         <div class="p-6">
-            <h2 class="text-lg font-bold mb-4">Receptionist Dashboard</h2>
+            <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
             <ul>
-                <li><a href="#" id="profile-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Profile</a></li>
-                <li><a href="#" id="appointments-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Book an Appointments</a></li>
-                <li><a href="#" id="appointments-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Today Patient List</a></li>
+                <li><a href="#" id="profile-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Patient Profile</a></li>
+                <li><a href="#" id="appointments-link" class="block py-2 px-4 hover:bg-[#20b4d59a] rounded-xl">Book an Appointment</a></li>
                 <!-- Add more links as needed -->
             </ul>
         </div>
@@ -67,7 +66,7 @@
         <div id="profile-content" class="container visible-content">
             <!-- Profile Section -->
             <section class="bg-[#0b3842] text-white p-6 rounded-lg shadow-md mb-6 ml-28">
-                <h2 class="text-2xl font-bold mb-4">ReciptionistProfile</h2>
+                <h2 class="text-2xl font-bold mb-4">Receptionist Profile</h2>
                 <div id="profile-section" class="flex items-center space-x-4">
                     <img id="profile-picture" src="" alt="Profile Picture" class="profile-picture hidden">
                     <div>
@@ -80,13 +79,23 @@
         </div>
 
         <div id="appointments-content" class="container hidden-content">
-            <!-- Appointment Reminder List -->
+            <!-- Appointment Booking Section -->
             <section class="bg-[#0b3842] text-white p-6 rounded-lg shadow-md ml-28">
-                <h2 class="text-2xl font-bold mb-4">Appointment Section</h2>
-                <ul  class="list-disc pl-5">
-                    <!-- Appointment Reminders -->
-                     <a href="../New appointment booking system/p_appointment.html" id="appointment-list"></a>
-                </ul>
+                <h2 class="text-2xl font-bold mb-4">Book an Appointment</h2>
+                <form id="appointment-form">
+                    <div class="mb-4">
+                        <label for="appointment-day" class="block text-sm font-bold text-white">Select a Day</label>
+                        <select id="appointment-day" class="mt-1 block w-full border-emerald-300 rounded-md shadow-sm p-2">
+                            <option value="" disabled selected >Select a day</option>
+                            <option class="text-emerald-800" value="Monday">Monday</option>
+                            <option class="text-emerald-800" value="Tuesday">Tuesday</option>
+                            <option class="text-emerald-800" value="Wednesday">Wednesday</option>
+                            <option class="text-emerald-800" value="Thursday">Thursday</option>
+                            <option class="text-emerald-800" value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="bg-emerald-800 text-black px-4 py-2 rounded font-bold">Book Appointment</button>
+                </form>
             </section>
         </div>
     </div>

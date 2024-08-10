@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render appointment list
     function renderAppointments() {
 
-        appointmentList.innerHTML='<u><b>Click to Make appointment</b></u>'
+        appointmentList.innerHTML='<u><b>Reminder List</b></u>'
         
     }
 

@@ -531,8 +531,13 @@ footerNavItems.forEach((v) => {
     footerNav_div.innerHTML += `<a href="#" class="text-white  hover:text-[#dbfb74]">${v}</a>`
 })
 
+console.log("main chal gaya");
+
+
 
 function addAdminData() {
+    console.log("sdfg");
+    
     let request = indexedDB.open('admin', 5);
 
     request.onupgradeneeded = (event) => {
@@ -554,9 +559,16 @@ function addAdminData() {
             { email: 'admin2@example.com', password: 'password2' }
         ];
 
+        console.log(adminData);
         adminData.forEach(admin => {
+
+            console.log(admin);
+
             const request = objectStore.add(admin);
+
             request.onsuccess = () => {
+
+                console.log(request);
                 console.log(`Admin data added: ${JSON.stringify(admin)}`);
             };
             // request.onerror = (event) => {
@@ -564,9 +576,9 @@ function addAdminData() {
             // };
         });
 
-        // transaction.oncomplete = () => {
-        //     console.log('Admin data transaction completed');
-        // };
+        transaction.oncomplete = () => {
+            console.log('Admin data transaction completed');
+        };
 
         // transaction.onerror = (event) => {
         //     console.error('Transaction error:', event.target.error);
@@ -578,6 +590,5 @@ function addAdminData() {
     };
 }
 
-// Call the function to add admin data
-addAdminData();
 
+addAdminData();

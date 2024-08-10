@@ -8,14 +8,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const profilePicture = document.getElementById('profile-picture');
     const profileName = document.getElementById('profile-name');
     const profileEmail = document.getElementById('profile-email');
-    const appointmentList = document.getElementById('appointment-list');
+    const appointmentForm = document.getElementById('appointment-form');
+    const appointmentDay = document.getElementById('appointment-day');
+    const doctorsDropdown = document.createElement('select');
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const profileLink = document.getElementById('profile-link');
     const appointmentsLink = document.getElementById('appointments-link');
     const profileContent = document.getElementById('profile-content');
     const appointmentsContent = document.getElementById('appointments-content');
-    // appointmentsContent.append('ilyas')
+
+    // Create doctors dropdown
+    doctorsDropdown.id = 'appointment-doctor';
+    doctorsDropdown.classList.add('mt-1', 'block', 'w-full', 'border-emerald-300', 'rounded-md', 'shadow-sm', 'p-2');
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    defaultOption.textContent = 'Select a doctor';
+    doctorsDropdown.appendChild(defaultOption);
+    appointmentForm.insertBefore(doctorsDropdown, appointmentForm.querySelector('button[type="submit"]'));
 
     // Simulated profile data
     let profileData = {
@@ -23,12 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         email: '',
         picture: ''
     };
-
-    // Simulated appointment data
-    const appointments = [
-        'Check-up on 2024-08-15',
-        'Dental cleaning on 2024-08-22'
-    ];
 
     // Render profile
     function renderProfile() {
@@ -40,13 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             profilePicture.classList.add('hidden');
         }
-    }
-
-    // Render appointment list
-    function renderAppointments() {
-
-        appointmentList.innerHTML='<u><b>Click to Make appointment</b></u>'
-        
     }
 
     // Show modal
@@ -82,6 +81,64 @@ document.addEventListener('DOMContentLoaded', () => {
         hideModal();
     });
 
+    // Open IndexedDB and fetch doctors
+    function fetchDoctors() {
+        const request = indexedDB.open('Users_DB', 6);
+
+        request.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('users')) {
+                db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+            }
+        };
+
+        request.onsuccess = function (event) {
+            const db = event.target.result;
+            const transaction = db.transaction(['users'], 'readonly');
+            const objectStore = transaction.objectStore('users');
+            const getAllRequest = objectStore.getAll();
+
+            getAllRequest.onsuccess = function (event) {
+                const users = event.target.result;
+                populateDoctorsDropdown(users);
+            };
+
+            transaction.oncomplete = function () {
+                db.close();
+            };
+        };
+
+        request.onerror = function () {
+            console.error('Failed to open the database.');
+        };
+    }
+
+    // Populate doctors dropdown
+    function populateDoctorsDropdown(users) {
+        users.forEach(user => {
+            if (user.specialization=== 'doctor') {  // Assuming each user has a role property
+                const option = document.createElement('option');
+                option.value = user.name;
+                option.textContent = user.name;
+                doctorsDropdown.appendChild(option);
+            }
+        });
+    }
+
+    // Handle appointment form submission
+    appointmentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const selectedDay = appointmentDay.value;
+        const selectedDoctor = doctorsDropdown.value;
+        if (selectedDoctor) {
+            alert(`Appointment booked for ${selectedDay} with doctor Name ${selectedDoctor}`);
+        } else {
+            alert('Please select a doctor.');
+        }
+        appointmentDay.value = ''; // Reset the dropdown after submission
+        doctorsDropdown.value = ''; // Reset the doctors dropdown after submission
+    });
+
     // Toggle sidebar
     sidebarToggle.addEventListener('click', () => {
         if (sidebar.classList.contains('sidebar-hidden')) {
@@ -99,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
     profileLink.addEventListener('click', (e) => {
         e.preventDefault();
         profileContent.classList.add('visible-content');
-        appointmentsContent.classList.remove('visible-content');
         appointmentsContent.classList.add('hidden-content');
     });
 
@@ -107,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     appointmentsLink.addEventListener('click', (e) => {
         e.preventDefault();
         appointmentsContent.classList.add('visible-content');
-        profileContent.classList.remove('visible-content');
         profileContent.classList.add('hidden-content');
     });
 
@@ -117,5 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial render
     renderProfile();
-    renderAppointments();
+
+    // Fetch doctors from IndexedDB
+    fetchDoctors();
 });

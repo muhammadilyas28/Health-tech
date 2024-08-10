@@ -31,7 +31,7 @@ let disInfo = (divId) =>{
 const dbName = 'Users_DB';
 let db;
 
-const request = indexedDB.open(dbName, 1);
+const request = indexedDB.open(dbName, 6);
 
 request.onerror = function(event) {
     console.error("Database error: ", event.target.errorCode);
