@@ -28,13 +28,13 @@ let cardEnd = `</div>`;
 // let profileSvg = `<svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.5 7.063C16.5 10.258 14.57 13 12 13c-2.572 0-4.5-2.742-4.5-5.938C7.5 3.868 9.16 2 12 2s4.5 1.867 4.5 5.063zM4.102 20.142C4.487 20.6 6.145 22 12 22c5.855 0 7.512-1.4 7.898-1.857a.416.416 0 0 0 .09-.317C19.9 18.944 19.106 15 12 15s-7.9 3.944-7.989 4.826a.416.416 0 0 0 .091.317z" fill="#ffffff"></path></g></svg>`;
 // let settingSvg = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20.1 9.2214C18.29 9.2214 17.55 7.9414 18.45 6.3714C18.97 5.4614 18.66 4.3014 17.75 3.7814L16.02 2.7914C15.23 2.3214 14.21 2.6014 13.74 3.3914L13.63 3.5814C12.73 5.1514 11.25 5.1514 10.34 3.5814L10.23 3.3914C9.78 2.6014 8.76 2.3214 7.97 2.7914L6.24 3.7814C5.33 4.3014 5.02 5.4714 5.54 6.3814C6.45 7.9414 5.71 9.2214 3.9 9.2214C2.86 9.2214 2 10.0714 2 11.1214V12.8814C2 13.9214 2.85 14.7814 3.9 14.7814C5.71 14.7814 6.45 16.0614 5.54 17.6314C5.02 18.5414 5.33 19.7014 6.24 20.2214L7.97 21.2114C8.76 21.6814 9.78 21.4014 10.25 20.6114L10.36 20.4214C11.26 18.8514 12.74 18.8514 13.65 20.4214L13.76 20.6114C14.23 21.4014 15.25 21.6814 16.04 21.2114L17.77 20.2214C18.68 19.7014 18.99 18.5314 18.47 17.6314C17.56 16.0614 18.3 14.7814 20.11 14.7814C21.15 14.7814 22.01 13.9314 22.01 12.8814V11.1214C22 10.0814 21.15 9.2214 20.1 9.2214ZM12 15.2514C10.21 15.2514 8.75 13.7914 8.75 12.0014C8.75 10.2114 10.21 8.7514 12 8.7514C13.79 8.7514 15.25 10.2114 15.25 12.0014C15.25 13.7914 13.79 15.2514 12 15.2514Z" fill="#ffffff"></path> </g></svg>`;
 
-let navDiv = () =>{
+let navDiv = () => {
 
     return `<div class="w-screen h-[8rem] flex justify-center items-center fixed z-50">
             <div class="w-[97%] h-[6rem] p-8 flex items-center gap-6 glassEffect rounded-3xl ">
 
-                <a class="text-white hover:text-gray-200 text-xl cursor-pointer">
-                    adonis    
+                <a class="text-white w-[20rem] text-center hover:text-gray-200 text-xl cursor-pointer">
+                    Health Tech Lab   
                 </a>
                 
                 <div class="w-0.5 h-[2.5rem] bg-white ml-4"> </div>
@@ -476,19 +476,16 @@ function createSection() {
     document.body.append(section);
 }
 
-// Call the function to create and display the section
-
-// imtiaz's footer code
 
 let footerDesign = () => {
     return ` 
-<div class="rounded-xl glassEffect m-10 w-full">
+<div class="rounded-xl glassEffect m-10 w-full ">
     <div>           
         <img src="./Assets/DNA.jpg" alt="" class=" opacity-5 absolute bg-cover -z-10">
     </div>
     <footer class=" p-4 shadow-lg  bg-cover footer-background  text-white m-10 rounded-xl">
         <div class=" flex items-center justify-center min-h-screen pt-20 pb-10 ">
-            <div class="container mx-auto p-4 flex flex-col items-center space-y-4    rounded-lg">
+            <div class="container mx-auto p-4 flex flex-col items-center space-y-4 rounded-lg">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white text-center">Download the <span class=" text-green-500 ">Medicalis</span> App today and get the best health services from us.</h1>
                 <p class="text-sm md:text-base lg:text-lg text-gray-400">Get the best features on Google Play Store and App Store</p>
                 <button class="px-8 py-2 bg-[#dbfb74] text-black  rounded-full hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
@@ -537,7 +534,7 @@ console.log("main chal gaya");
 
 function addAdminData() {
     console.log("sdfg");
-    
+
     let request = indexedDB.open('admin', 5);
 
     request.onupgradeneeded = (event) => {
@@ -571,18 +568,11 @@ function addAdminData() {
                 console.log(request);
                 console.log(`Admin data added: ${JSON.stringify(admin)}`);
             };
-            // request.onerror = (event) => {
-            //     console.error('Error adding admin data:', event.target.error);
-            // };
         });
 
         transaction.oncomplete = () => {
             console.log('Admin data transaction completed');
         };
-
-        // transaction.onerror = (event) => {
-        //     console.error('Transaction error:', event.target.error);
-        // };
     };
 
     request.onerror = (event) => {

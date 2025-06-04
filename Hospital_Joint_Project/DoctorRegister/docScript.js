@@ -43,7 +43,12 @@ async function fetchRoles() {
 
 function inputForm(roles) {
     return `
-        <h2 class="text-3xl font-bold mb-6 flex justify-center items-center text-green-900">Sign Up in HEALTH-CARE </h2>
+    <div class="flex justify-between items-center">
+            <a href="../Landing_page.html" class="text-blue-500 hover:text-blue-600">
+                <img src="./back-arrow.png" alt="doctor" class="w-5 h-5 mb-6">
+            </a>
+            <h2 class="text-xl font-semibold mb-6 flex justify-center items-center text-blue-500">Register in Health Tech Lab </h2>
+        </div>
         <form id="userForm">
             <input type="hidden" id="userId" />
             <div class="mb-4">
@@ -80,15 +85,24 @@ function inputForm(roles) {
                     class="w-full p-2 border border-gray-300 rounded mt-1"
                 />
             </div>
-            <div class="mb-4">
+            <div class="mb-4 relative">
                 <label for="password" class="block text-gray-700">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    class="w-full p-2 border border-gray-300 rounded mt-1"
-                />
+                <div class="relative">
+                    <input
+                        type="password"
+                        id="password"
+                        class="w-full p-2 border border-gray-300 rounded mt-1 pr-10"
+                    />
+                    <button 
+                        type="button"
+                        onclick="togglePassword()"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+            <button type="submit" class="bg-blue-500 text-white w-full px-4 py-2 rounded">
                 Sign Up
             </button>
         </form>
@@ -97,7 +111,7 @@ function inputForm(roles) {
            </div>
            <ul id="userList" class="mt-4"></ul>
            `;
-           window.location.href = '../Landing_page.html'
+    window.location.href = '../Landing_page.html'
 }
 
 async function handleFormSubmit(event) {
@@ -126,7 +140,7 @@ async function handleFormSubmit(event) {
             phone,
             email,
             password,
-            status:false,
+            status: false,
         });
 
         request.onsuccess = () => {
@@ -181,15 +195,28 @@ async function updateUserList() {
 
 
 async function getRoles() {
+    // Dummy roles data as fallback
+    const dummyRoles = [
+        { id: 1, name: 'doctor' },
+        { id: 2, name: 'receptionist' },
+        { id: 3, name: 'patient' },
+        { id: 4, name: 'admin' },
+        { id: 5, name: 'nurse' }
+    ];
+
     return new Promise((resolve, reject) => {
         // Open the database
-        const request = indexedDB.open('Roles', 5); // Adjust the version if needed
+        const request = indexedDB.open('Roles', 5);
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             // Create the 'roles' object store if it doesn't exist
             if (!db.objectStoreNames.contains('roles')) {
-                db.createObjectStore('roles', { keyPath: 'id', autoIncrement: true });
+                const store = db.createObjectStore('roles', { keyPath: 'id', autoIncrement: true });
+                // Add dummy roles to the store
+                dummyRoles.forEach(role => {
+                    store.add(role);
+                });
             }
         };
 
@@ -200,18 +227,27 @@ async function getRoles() {
             const allRolesRequest = objectStore.getAll();
 
             allRolesRequest.onsuccess = () => {
-                resolve(allRolesRequest.result);
+                const roles = allRolesRequest.result;
+                // If no roles found in DB, return dummy roles
+                if (!roles || roles.length === 0) {
+                    console.log('No roles found in DB, using dummy roles');
+                    resolve(dummyRoles);
+                } else {
+                    resolve(roles);
+                }
             };
 
             allRolesRequest.onerror = (event) => {
                 console.error('Error fetching roles:', event.target.error);
-                reject(event.target.error);
+                console.log('Using dummy roles due to fetch error');
+                resolve(dummyRoles);
             };
         };
 
         request.onerror = (event) => {
             console.error('Database error:', event.target.error);
-            reject(event.target.error);
+            console.log('Using dummy roles due to DB error');
+            resolve(dummyRoles);
         };
     });
 }
@@ -221,20 +257,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         const roles = await getRoles();
         console.log('Roles:', roles);
         // const roles = await fetchRoles();
-    const mainDiv = document.getElementById("mainDiv");
-    mainDiv.className = "bg-white opacity-80 p-8 rounded-xl shadow";
-    mainDiv.style.width='450px'
-    console.log(roles);
-    
-    mainDiv.innerHTML = inputForm(roles);
+        const mainDiv = document.getElementById("mainDiv");
+        mainDiv.className = "bg-white opacity-80 p-8 rounded-xl shadow";
+        mainDiv.style.width = '450px'
+        console.log(roles);
 
-    const form = document.getElementById('userForm');
-    form.addEventListener('submit', handleFormSubmit);
+        mainDiv.innerHTML = inputForm(roles);
 
-    updateUserList();
+        const form = document.getElementById('userForm');
+        form.addEventListener('submit', handleFormSubmit);
+
+        updateUserList();
         // Use the roles data to populate a dropdown or any other UI element
     } catch (error) {
         console.error('Failed to fetch roles:', error);
     }
-    
+
 });
+
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
